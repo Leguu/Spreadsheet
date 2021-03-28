@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Driver {
@@ -31,6 +31,13 @@ public class Driver {
             return;
         }
 
+        for (String arg : args) {
+            if (Files.notExists(Path.of(arg))) {
+                System.err.println("File \"" + arg + "\" does not exist. Closing all files and exiting...");
+                return;
+            }
+        }
+
         Driver driver = new Driver();
 
         driver.csvToJson(args);
@@ -41,7 +48,7 @@ public class Driver {
     static void writeToJson(String name, Record[] records) throws IOException, InputException {
         var file = new File(name);
         var output = new PrintWriter(file);
-        
+
 
         output.println("[");
         var attributes = records[0].data;
@@ -139,16 +146,6 @@ public class Driver {
                 // If an IOException of any kind occurs, we need to delete all the previously created files.
                 System.err.println("SEVERE: Unrecoverable error occurred for file \"" + input + "\": " + e.getMessage());
                 System.err.println("\tDeleting all working files...");
-                // Rename all input files to their output names.
-                var outputs = Arrays.stream(args).map(s -> {
-                    var filetype = fileType(s);
-                    return s.replace(filetype, "json");
-                }).toArray(String[]::new);
-                for (String output : outputs) {
-                    if (input.equals(output)) continue;
-                    var file = new File(output);
-                    file.delete();
-                }
                 break;
             } catch (InputException e) {
                 System.err.println("ERROR: Could not open file \"" + input + "\" for reading: " + e.getMessage());

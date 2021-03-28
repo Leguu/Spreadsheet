@@ -18,11 +18,14 @@ public class Tokenizer {
     }
 
     public String nextToken() throws ParseException {
+        // If the token is blank, then we know a field is missing.
         if (buf[index].isBlank()) {
             index += 1;
             return null;
         }
 
+        // If the token does not start with a quote, or if it ends with a quote, then we know we can return it as-is.
+        // The second condition here is for when there's a single-word token surrounded by quotations.
         if (!buf[index].startsWith("\"") || buf[index].endsWith("\"")) {
             return buf[index++];
         }
