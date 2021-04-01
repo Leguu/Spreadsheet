@@ -1,4 +1,4 @@
-package data.exceptions;
+package exceptions;
 
 /**
  * Error type for errors related to the files given by the user.

@@ -1,64 +1,37 @@
 package data.records;
 
 import data.Tokenizer;
-import data.exceptions.InputException;
-import data.exceptions.MissingFieldException;
-import data.exceptions.ParseException;
+import exceptions.InputException;
+import exceptions.MissingFieldException;
+import exceptions.ParseException;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.ArrayList;
 
 /**
  * A record represents a single line of a CSV document.
  */
 public class Record {
-    public final String[] data;
-    private final Tokenizer tokenizer;
+    private final ArrayList<String> data = new ArrayList<>();
 
     /**
      * Create a new Record with a length equal to the number of tokens present.
      * Only use to create an attribute record.
      *
      * @param line the line to convert.
-     * @throws MissingFieldException
-     * @throws ParseException
      */
     public Record(String line) throws MissingFieldException, ParseException {
-        tokenizer = new Tokenizer(line);
-        this.data = new String[tokenizer.length()];
-        parseCSV();
-    }
+        var tokenizer = new Tokenizer(line);
 
-    /**
-     * Creates a new Record with pre-set length.
-     * Use this for creating non-attribute records.
-     *
-     * @param line
-     * @param len
-     * @throws MissingFieldException
-     * @throws ParseException
-     */
-    public Record(String line, int len) throws MissingFieldException, ParseException {
-        tokenizer = new Tokenizer(line);
-        this.data = new String[len];
-        parseCSV();
-    }
-
-    public void parseCSV() throws MissingFieldException, ParseException {
-        // Counts the number of missing fields.
         var missing = 0;
-
-        for (int i = 0; tokenizer.hasToken(); i += 1) {
-            if (i >= data.length)
-                throw new ParseException("There are more entries than attributes!");
+        while (tokenizer.hasToken()) {
             var token = tokenizer.nextToken();
 
             if (token == null) {
-                data[i] = "*****";
+                data.add("*****");
                 missing += 1;
                 continue;
             }
-            
+
             token = token.trim();
 
             // If it's a number don't add quotes around it.
@@ -66,36 +39,33 @@ public class Record {
             // If it is, and doesn't have quotes, add quotes.
             try {
                 Double.parseDouble(token);
-                data[i] = token;
+                data.add(token);
             } catch (NumberFormatException ignored) {
-                if (token.startsWith("\"")) data[i] = token;
-                else data[i] = '"' + token + '"';
+                if (token.startsWith("\"")) data.add(token);
+                else data.add('"' + token + '"');
             }
-
         }
 
         if (missing != 0) throw new MissingFieldException(
                 String.join(", ", data),
                 missing,
-                data.length
+                data.size()
         );
     }
 
-    @Override
-    public String toString() {
-        return "Record{" +
-                "data=" + Arrays.toString(data) +
-                '}';
+    public int length() {
+        return data.size();
     }
 
-    public String toJSON(String[] attributes) throws InputException {
-        if (attributes.length > Arrays.stream(data).filter(Objects::nonNull).count()) throw new InputException("There are more attributes than fields!");
+    public String toJSON(Record attributes) throws InputException {
+        if (attributes.length() > data.size())
+            throw new InputException("There are more attributes than fields!");
         var sb = new StringBuilder("{\n");
-        for (int i = 0; i < attributes.length; i++) {
+        for (int i = 0; i < attributes.length(); i++) {
             sb.append('\t');
-            sb.append(attributes[i]).append(": ");
-            sb.append(data[i]);
-            sb.append(i == attributes.length - 1 ? "\n" : ",\n");
+            sb.append(attributes.data.get(i)).append(": ");
+            sb.append(data.get(i));
+            sb.append(i == attributes.length() - 1 ? "\n" : ",\n");
         }
         sb.append("}");
         return sb.toString();

@@ -1,6 +1,6 @@
 package data;
 
-import data.exceptions.ParseException;
+import exceptions.ParseException;
 
 /**
  * Custom tokenizer class that tokenizes and respects quotes.
@@ -10,7 +10,7 @@ public class Tokenizer {
     int index = 0;
 
     public Tokenizer(String line) {
-        buf = line.split(",");
+        buf = line.split(",", -1);
     }
 
     public boolean hasToken() {
@@ -38,16 +38,5 @@ public class Tokenizer {
         }
 
         throw new ParseException("There is a missing closing quote!");
-    }
-
-    public int length() throws ParseException {
-        var prev = index;
-        var i = 0;
-        while (hasToken()) {
-            nextToken();
-            i += 1;
-        }
-        index = prev;
-        return i;
     }
 }

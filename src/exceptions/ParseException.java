@@ -1,4 +1,4 @@
-package data.exceptions;
+package exceptions;
 
 /**
  * Error for failure in parsing. I.e., malformed CSV.
