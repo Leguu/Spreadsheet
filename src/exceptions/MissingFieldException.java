@@ -1,6 +1,4 @@
-package data.exceptions;
-
-import java.io.PrintWriter;
+package exceptions;
 
 /**
  * Error for missing fields.
