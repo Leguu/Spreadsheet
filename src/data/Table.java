@@ -37,9 +37,9 @@ public class Table {
             try {
                 entries.add(new Record(line));
             } catch (MissingFieldException e) {
-                System.err.print("WARN: In file \"" + name + "\", line " + (i + 1) + ": ");
-                System.err.println(e.getMessage() + " Skipping entry...");
-                log.append("Line ").append(String.valueOf(i)).append(": ").append(e.line).append("\n");
+                System.err.print("WARN: In file \"" + name + "\", line " + (i + 2) + ": ");
+                System.err.println(e.getMessage() + "\n\tSkipping entry...");
+                log.append("Line ").append(String.valueOf(i + 2)).append(": ").append(e.line).append("\n");
                 missingFields += e.missing;
             }
         }
