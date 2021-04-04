@@ -11,9 +11,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 
+/**
+ * The Driver class of the program where the program starts running
+ */
 public class Driver {
     PrintWriter log;
 
+    /**
+     * This is the constructor of Driver, will look if errors.txt is accessible
+     */
     public Driver() {
         try {
             var file = new File("errors.txt");
@@ -24,6 +30,10 @@ public class Driver {
         }
     }
 
+    /**
+     * The main method where we run the program
+     * @param args Command-line argument
+     */
     public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Please input at least 1 file name.");
@@ -44,6 +54,10 @@ public class Driver {
         driver.log.close();
     }
 
+    /**
+     * This method converts the CSV format to JSON format.
+     * @param args Command-line argument
+     */
     void csvToJson(String[] args) {
         for (String input : args) {
             try {

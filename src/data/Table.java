@@ -10,10 +10,29 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The Table class represents a CSV file. It contains both attributes and entries of the file.
+ */
 public class Table {
+    /**
+     * The attributes of the file
+     */
     private final Record attributes;
+    /**
+     * An arraylist of entries (data)
+     */
     private final ArrayList<Record> entries = new ArrayList<>();
 
+    /**
+     * This method is the constructor of the Table Class. It will write to the Log file any errors/missing values. It will also record valid attributes and entries.
+     * @param reader This is where we read the csv file
+     * @param log This is where we log all of out errors/missing values
+     * @param name The name of the file we read from
+     * @throws InputException Throws InputException if we have insufficient entries, or a non-existent file.
+     * @throws ParseException Throws ParseException if we have failure in parsing
+     * @throws IOException Throws IOException if we have a FileNotFoundException or NoSuchElementException
+     * @throws MissingFieldException Throws MissingFieldException when we have missing fields in CSV
+     */
     public Table(Scanner reader, Writer log, String name) throws InputException, ParseException, IOException, MissingFieldException {
         var line = "";
 
@@ -56,6 +75,12 @@ public class Table {
         }
     }
 
+    /**
+     * This method will write the attributes and entries to JSON only if all attributes are available
+     * @param writer This parameter is where the JSON file we write to
+     * @throws IOException Throws IOException if we have a FileNotFoundException or NoSuchElementException
+     * @throws InputException Throws InputException if we have insufficient entries, or a non-existent file.
+     */
     public void writeJSON(Writer writer) throws IOException, InputException {
         writer.write("[\n");
         for (int i = 0; i < entries.size(); i++) {

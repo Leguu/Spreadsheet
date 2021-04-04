@@ -17,7 +17,7 @@ public class Record {
      * Create a new Record with a length equal to the number of tokens present.
      * Only use to create an attribute record.
      *
-     * @param line the line to convert.
+     * @param line the String to convert.
      */
     public Record(String line) throws MissingFieldException, ParseException {
         var tokenizer = new Tokenizer(line);
@@ -53,10 +53,20 @@ public class Record {
         );
     }
 
+    /**
+     *The length method simply returns the length of record's data.
+     * @return The data size
+     */
     public int length() {
         return data.size();
     }
 
+    /**
+     *
+     * This methods prints out the attributes and data to JSON
+     * @param attributes The record representing the attribute
+     * @throws InputException Will throw whenever there are mroe attributes than fields. No JSON will be created
+     */
     public String toJSON(Record attributes) throws InputException {
         if (attributes.length() > data.size())
             throw new InputException("There are more attributes than fields!");

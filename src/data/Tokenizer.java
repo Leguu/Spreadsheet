@@ -6,17 +6,33 @@ import exceptions.ParseException;
  * Custom tokenizer class that tokenizes and respects quotes.
  */
 public class Tokenizer {
+    /**
+     * The record
+     */
     final String[] buf;
     int index = 0;
 
+    /**
+     * The Constructor of Tokenizer, will split the line in commas
+     * @param line The String to split
+     */
     public Tokenizer(String line) {
         buf = line.split(",", -1);
     }
 
+    /**
+     * This method looks if theres another token in the record
+     * @return Returns a boolean weather or not the index is smaller than length of buf
+     */
     public boolean hasToken() {
         return index < buf.length;
     }
 
+    /**
+     * This methods returns the String of the next token in the record
+     * @return A String of the next token
+     * @throws ParseException Looks if there's a missing quote and throws a ParseException
+     */
     public String nextToken() throws ParseException {
         // If the token is blank, then we know a field is missing.
         if (buf[index].isBlank()) {
